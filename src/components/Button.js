@@ -1,5 +1,5 @@
 const Button = (props) => {
-  const { bgcolor, color } = props;
+  const { bgcolor, color, children, onClick } = props;
   return (
     <button
       style={{
@@ -10,8 +10,9 @@ const Button = (props) => {
         backgroundColor: bgcolor,
         color: color,
       }}
+      onClick={onClick}
     >
-      some text
+      {children}
     </button>
   );
 };

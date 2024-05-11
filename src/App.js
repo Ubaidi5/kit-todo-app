@@ -1,28 +1,48 @@
+import { useState } from "react";
 import "./App.css";
 import Input from "./components/Input";
 import Button from "./components/Button";
 import List from "./components/List";
 
-const todos = [
-  {
-    title: "Create component",
-    status: "completed",
-  },
-  {
-    title: "Pass props into component",
-    status: "pending",
-  },
-  {
-    title: "Pass props as children",
-    status: "pending",
-  },
-  {
-    title: "Create UI for todo app",
-    status: "pending",
-  },
-];
-
 function App() {
+  const [newTodo, setNewTodo] = useState("");
+  const [todos, setTodos] = useState([
+    { title: "Task 1", status: "pending" },
+    { title: "Task 2", status: "pending" },
+    { title: "Task 3", status: "completed" },
+    { title: "Task 4", status: "pending" },
+  ]);
+  const [type, setType] = useState("all");
+
+  function addTodo() {
+    todos.push({
+      title: newTodo,
+      status: "pending",
+    });
+    setTodos([...todos]);
+    setNewTodo("");
+  }
+
+  function markAsComplete(index) {
+    todos[index].status = "completed";
+    setTodos([...todos]);
+  }
+
+  const pending_task = todos.filter((t) => {
+    return t.status == "pending";
+  });
+
+  const filtered_tasks = todos.filter((todo) => {
+    // if (type === "all") {
+    //   return true;
+    // } else if (type === "pending" && todo.status === "pending") {
+    //   return true;
+    // } else if (type === "completed" && todo.status === "completed") {
+    //   return true;
+    // }
+    // return false;
+  });
+
   return (
     <div>
       <h1 style={{ textAlign: "center", marginTop: 32 }}>React Todo App</h1>
@@ -46,12 +66,19 @@ function App() {
             margin: "12px auto",
           }}
         >
-          <Input width={300} placeholder="Add some text" />
-          <Button bgcolor="blue" color="white" />
+          <Input
+            width={300}
+            placeholder="Add some text"
+            value={newTodo}
+            onChange={(value) => setNewTodo(value)}
+          />
+          <Button bgcolor="blue" color="white" onClick={addTodo}>
+            Add todo
+          </Button>
         </div>
 
         <div style={{ width: "70%", margin: "12px auto" }}>
-          <List todos={todos} />
+          <List todos={filtered_tasks} markAsComplete={markAsComplete} />
         </div>
 
         <footer
@@ -62,11 +89,41 @@ function App() {
             padding: "8px 32px",
           }}
         >
-          <p>3 items left</p>
+          <p>{pending_task.length} items left</p>
           <div style={{ display: "flex", gap: 16 }}>
-            <p>All</p>
-            <p>Todo</p>
-            <p>Completed</p>
+            <p
+              style={{
+                cursor: "pointer",
+                color: type === "all" ? "green" : "#000",
+              }}
+              onClick={() => {
+                setType("all");
+              }}
+            >
+              All
+            </p>
+            <p
+              style={{
+                cursor: "pointer",
+                color: type === "pending" ? "green" : "#000",
+              }}
+              onClick={() => {
+                setType("pending");
+              }}
+            >
+              Todo
+            </p>
+            <p
+              style={{
+                cursor: "pointer",
+                color: type === "completed" ? "green" : "#000",
+              }}
+              onClick={() => {
+                setType("completed");
+              }}
+            >
+              Completed
+            </p>
           </div>
         </footer>
       </div>

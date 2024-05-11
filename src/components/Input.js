@@ -1,5 +1,5 @@
 const Input = (props) => {
-  const { width, placeholder } = props;
+  const { width, placeholder, value, onChange } = props;
   return (
     <input
       style={{
@@ -10,6 +10,10 @@ const Input = (props) => {
         outline: "none",
       }}
       placeholder={placeholder}
+      value={value}
+      onChange={(e) => {
+        onChange(e.target.value);
+      }}
     />
   );
 };
