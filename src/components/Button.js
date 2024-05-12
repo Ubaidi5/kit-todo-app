@@ -1,5 +1,5 @@
 const Button = (props) => {
-  const { bgcolor, color, children, onClick } = props;
+  const { bgcolor = "blue", color = "white", children, onClick, style } = props;
   return (
     <button
       style={{
@@ -9,6 +9,7 @@ const Button = (props) => {
         outline: "none",
         backgroundColor: bgcolor,
         color: color,
+        ...style,
       }}
       onClick={onClick}
     >

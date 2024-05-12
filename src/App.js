@@ -8,8 +8,22 @@ function App() {
   const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [type, setType] = useState("all");
+  const [error, setError] = useState("");
 
   function addTodo() {
+    if (newTodo === "") {
+      setError("Please add some task");
+      return;
+    }
+
+    const is_exist = todos.filter((todo) => todo.title === newTodo);
+
+    if (is_exist.length > 0) {
+      setError("This task already exist");
+      return;
+    }
+
+    setError(false);
     todos.push({
       title: newTodo,
       status: "pending",
@@ -91,7 +105,7 @@ function App() {
               Add todo
             </Button>
           </div>
-          <p>Please add some task</p>
+          {error ? <p>{error}</p> : null}
         </div>
         <div style={{ width: "70%", margin: "12px auto" }}>
           <List

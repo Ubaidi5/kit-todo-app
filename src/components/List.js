@@ -1,3 +1,6 @@
+import { FaRegTrashCan } from "react-icons/fa6";
+import Button from "./Button";
+
 const List = (props) => {
   const { todos, markAsComplete, deleteTodo } = props;
   return (
@@ -14,24 +17,25 @@ const List = (props) => {
 
             <p>
               {todo.status == "pending" ? (
-                <button
+                <Button
                   onClick={() => {
                     markAsComplete(index);
                   }}
                 >
                   Pending
-                </button>
+                </Button>
               ) : (
                 <span style={{ color: "green" }}>Completed</span>
               )}
-              <button
-                style={{ marginLeft: 12 }}
+              <Button
+                bgcolor="red"
+                style={{ marginLeft: 12, borderRadius: 50 }}
                 onClick={() => {
                   deleteTodo(index);
                 }}
               >
-                delete
-              </button>
+                <FaRegTrashCan />
+              </Button>
             </p>
           </div>
         );
