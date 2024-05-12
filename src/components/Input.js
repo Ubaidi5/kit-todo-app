@@ -1,5 +1,5 @@
 const Input = (props) => {
-  const { width, placeholder, value, onChange } = props;
+  const { width, placeholder, value, onChange, onKeyDown } = props;
   return (
     <input
       style={{
@@ -14,6 +14,7 @@ const Input = (props) => {
       onChange={(e) => {
         onChange(e.target.value);
       }}
+      onKeyDown={onKeyDown}
     />
   );
 };

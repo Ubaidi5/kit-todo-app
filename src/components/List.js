@@ -1,5 +1,5 @@
 const List = (props) => {
-  const { todos, markAsComplete } = props;
+  const { todos, markAsComplete, deleteTodo } = props;
   return (
     <div>
       {todos.map((todo, index) => {
@@ -11,6 +11,7 @@ const List = (props) => {
             }}
           >
             <p>{todo.title}</p>
+
             <p>
               {todo.status == "pending" ? (
                 <button
@@ -23,6 +24,14 @@ const List = (props) => {
               ) : (
                 <span style={{ color: "green" }}>Completed</span>
               )}
+              <button
+                style={{ marginLeft: 12 }}
+                onClick={() => {
+                  deleteTodo(index);
+                }}
+              >
+                delete
+              </button>
             </p>
           </div>
         );

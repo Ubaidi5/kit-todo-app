@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Input from "./components/Input";
 import Button from "./components/Button";
@@ -6,12 +6,7 @@ import List from "./components/List";
 
 function App() {
   const [newTodo, setNewTodo] = useState("");
-  const [todos, setTodos] = useState([
-    { title: "Task 1", status: "pending" },
-    { title: "Task 2", status: "pending" },
-    { title: "Task 3", status: "completed" },
-    { title: "Task 4", status: "pending" },
-  ]);
+  const [todos, setTodos] = useState([]);
   const [type, setType] = useState("all");
 
   function addTodo() {
@@ -21,11 +16,20 @@ function App() {
     });
     setTodos([...todos]);
     setNewTodo("");
+
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }
+
+  function deleteTodo(index) {
+    todos.splice(index, 1);
+    setTodos([...todos]);
+    localStorage.setItem("todos", JSON.stringify(todos));
   }
 
   function markAsComplete(index) {
     todos[index].status = "completed";
     setTodos([...todos]);
+    localStorage.setItem("todos", JSON.stringify(todos));
   }
 
   const pending_task = todos.filter((t) => {
@@ -33,15 +37,21 @@ function App() {
   });
 
   const filtered_tasks = todos.filter((todo) => {
-    // if (type === "all") {
-    //   return true;
-    // } else if (type === "pending" && todo.status === "pending") {
-    //   return true;
-    // } else if (type === "completed" && todo.status === "completed") {
-    //   return true;
-    // }
-    // return false;
+    if (type === "all") {
+      return true;
+    } else if (type === "pending" && todo.status === "pending") {
+      return true;
+    } else if (type === "completed" && todo.status === "completed") {
+      return true;
+    }
+    return false;
   });
+
+  useEffect(() => {
+    const my_todos = localStorage.getItem("todos");
+    const parsed_todos = JSON.parse(my_todos);
+    setTodos(parsed_todos);
+  }, []);
 
   return (
     <div>
@@ -71,6 +81,11 @@ function App() {
             placeholder="Add some text"
             value={newTodo}
             onChange={(value) => setNewTodo(value)}
+            onKeyDown={(e) => {
+              if (e.code === "Enter") {
+                addTodo();
+              }
+            }}
           />
           <Button bgcolor="blue" color="white" onClick={addTodo}>
             Add todo
@@ -78,7 +93,11 @@ function App() {
         </div>
 
         <div style={{ width: "70%", margin: "12px auto" }}>
-          <List todos={filtered_tasks} markAsComplete={markAsComplete} />
+          <List
+            todos={filtered_tasks}
+            markAsComplete={markAsComplete}
+            deleteTodo={deleteTodo}
+          />
         </div>
 
         <footer
