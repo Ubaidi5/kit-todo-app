@@ -68,31 +68,31 @@ function App() {
         <h2 style={{ textAlign: "center" }}>THINGS TO DO</h2>
         <hr style={{ width: "70%", margin: "12px auto" }} />
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 12,
-            width: "70%",
-            margin: "12px auto",
-          }}
-        >
-          <Input
-            width={300}
-            placeholder="Add some text"
-            value={newTodo}
-            onChange={(value) => setNewTodo(value)}
-            onKeyDown={(e) => {
-              if (e.code === "Enter") {
-                addTodo();
-              }
+        <div style={{ width: "70%", margin: "12px auto" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 12,
             }}
-          />
-          <Button bgcolor="blue" color="white" onClick={addTodo}>
-            Add todo
-          </Button>
+          >
+            <Input
+              width={300}
+              placeholder="Add some text"
+              value={newTodo}
+              onChange={(value) => setNewTodo(value)}
+              onKeyDown={(e) => {
+                if (e.code === "Enter") {
+                  addTodo();
+                }
+              }}
+            />
+            <Button bgcolor="blue" color="white" onClick={addTodo}>
+              Add todo
+            </Button>
+          </div>
+          <p>Please add some task</p>
         </div>
-
         <div style={{ width: "70%", margin: "12px auto" }}>
           <List
             todos={filtered_tasks}
