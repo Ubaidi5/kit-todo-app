@@ -1,8 +1,13 @@
 import { FaRegTrashCan } from "react-icons/fa6";
 import Button from "./Button";
+import { AiOutlineLoading } from "react-icons/ai";
+
+let currentIndex = -1;
 
 const List = (props) => {
-  const { todos, markAsComplete, deleteTodo } = props;
+  const { todos, markAsComplete, deleteTodo, delete_loading } = props;
+
+  console.log({ delete_loading, currentIndex });
   return (
     <div>
       {todos.map((todo, index) => {
@@ -15,7 +20,7 @@ const List = (props) => {
           >
             <p>{todo.title}</p>
 
-            <p>
+            <p style={{ flexShrink: 0 }}>
               {todo.completed == false ? (
                 <Button
                   onClick={() => {
@@ -31,10 +36,15 @@ const List = (props) => {
                 bgcolor="red"
                 style={{ marginLeft: 12, borderRadius: 50 }}
                 onClick={() => {
+                  currentIndex = index;
                   deleteTodo(index);
                 }}
               >
-                <FaRegTrashCan />
+                {delete_loading && currentIndex === index ? (
+                  <AiOutlineLoading />
+                ) : (
+                  <FaRegTrashCan />
+                )}
               </Button>
             </p>
           </div>

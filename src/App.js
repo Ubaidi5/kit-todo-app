@@ -3,11 +3,15 @@ import "./App.css";
 import Input from "./components/Input";
 import Button from "./components/Button";
 import List from "./components/List";
+import { useLocalStorage } from "./hooks/useLoaclStorage";
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [type, setType] = useState("all");
   const [error, setError] = useState("");
+  const [delete_loading, toggle_delete_loading] = useState(false);
+  const [get_loading, toggle_get_loading] = useState(false);
+  const [myName, setMyName] = useLocalStorage("", "name");
 
   function addTodo() {
     if (newTodo === "") {
@@ -33,10 +37,21 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }
 
-  function deleteTodo(index) {
-    todos.splice(index, 1);
-    setTodos([...todos]);
-    localStorage.setItem("todos", JSON.stringify(todos));
+  async function deleteTodo(index) {
+    try {
+      toggle_delete_loading(true);
+      const res = await fetch("https://jsonplaceholder.typicode.com/todos/1", {
+        method: "DELETE",
+      });
+
+      todos.splice(index, 1);
+      setTodos([...todos]);
+      localStorage.setItem("todos", JSON.stringify(todos));
+    } catch (err) {
+      console.log("Error in Delete function", err);
+    } finally {
+      toggle_delete_loading(false);
+    }
   }
 
   function markAsComplete(index) {
@@ -46,29 +61,35 @@ function App() {
   }
 
   const pending_task = todos.filter((t) => {
-    return t.status == "pending";
+    return t.completed == false;
   });
 
   const filtered_tasks = todos.filter((todo) => {
     if (type === "all") {
       return true;
-    } else if (type === "pending" && todo.status === "pending") {
+    } else if (type === "pending" && todo.completed == false) {
       return true;
-    } else if (type === "completed" && todo.status === "completed") {
+    } else if (type === "completed" && todo.completed === true) {
       return true;
     }
     return false;
   });
 
-  async function getAllTodos() {
+  function getAllTodos() {
+    toggle_get_loading(true);
+
     fetch("https://jsonplaceholder.typicode.com/todos")
       .then((res) => res.json())
       .then((data) => {
         let first_ten = data.splice(0, 9);
+        console.log({ first_ten });
         setTodos(first_ten);
       })
       .catch((error) => {
         console.log("Error", error);
+      })
+      .finally(() => {
+        toggle_get_loading(false);
       });
   }
 
@@ -80,6 +101,20 @@ function App() {
 
   return (
     <div>
+      <input
+        value={myName}
+        onChange={(e) => {
+          setMyName(e.target.value);
+        }}
+      />
+      <p>My name: {myName}</p>
+      <button
+        onClick={() => {
+          setMyName("Ubaid");
+        }}
+      >
+        Update
+      </button>
       <h1 style={{ textAlign: "center", marginTop: 32 }}>React Todo App</h1>
       <div
         style={{
@@ -118,11 +153,18 @@ function App() {
           {error ? <p>{error}</p> : null}
         </div>
         <div style={{ width: "70%", margin: "12px auto" }}>
-          <List
-            todos={filtered_tasks}
-            markAsComplete={markAsComplete}
-            deleteTodo={deleteTodo}
-          />
+          {get_loading ? (
+            <div>
+              <p>Loading...</p>
+            </div>
+          ) : (
+            <List
+              todos={filtered_tasks}
+              markAsComplete={markAsComplete}
+              deleteTodo={deleteTodo}
+              delete_loading={delete_loading}
+            />
+          )}
         </div>
 
         <footer
