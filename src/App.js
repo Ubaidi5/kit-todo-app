@@ -5,7 +5,6 @@ import Button from "./components/Button";
 import List from "./components/List";
 
 function App() {
-  const [newTodo, setNewTodo] = useState("");
   const [todos, setTodos] = useState([]);
   const [type, setType] = useState("all");
   const [error, setError] = useState("");
@@ -23,7 +22,7 @@ function App() {
       return;
     }
 
-    setError(false);
+    setError("");
     todos.push({
       title: newTodo,
       status: "pending",
@@ -61,12 +60,23 @@ function App() {
     return false;
   });
 
+  async function getAllTodos() {
+    fetch("https://jsonplaceholder.typicode.com/todos")
+      .then((res) => res.json())
+      .then((data) => {
+        let first_ten = data.splice(0, 9);
+        setTodos(first_ten);
+      })
+      .catch((error) => {
+        console.log("Error", error);
+      });
+  }
+
   useEffect(() => {
-    const my_todos = localStorage.getItem("todos");
-    console.log({ my_todos });
-    const parsed_todos = JSON.parse(my_todos);
-    setTodos(parsed_todos || []);
+    getAllTodos();
   }, []);
+
+  const [newTodo, setNewTodo] = useState("");
 
   return (
     <div>

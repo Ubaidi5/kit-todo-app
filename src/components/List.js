@@ -16,7 +16,7 @@ const List = (props) => {
             <p>{todo.title}</p>
 
             <p>
-              {todo.status == "pending" ? (
+              {todo.completed == false ? (
                 <Button
                   onClick={() => {
                     markAsComplete(index);
