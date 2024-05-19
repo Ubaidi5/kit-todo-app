@@ -2,11 +2,10 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import Button from "./Button";
 import { AiOutlineLoading } from "react-icons/ai";
 
-let currentIndex = -1;
-
 const List = (props) => {
   const { todos, markAsComplete, deleteTodo, delete_loading } = props;
 
+  let currentIndex = -1;
   console.log({ delete_loading, currentIndex });
   return (
     <div>

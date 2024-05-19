@@ -4,14 +4,18 @@ import Input from "./components/Input";
 import Button from "./components/Button";
 import List from "./components/List";
 import { useLocalStorage } from "./hooks/useLoaclStorage";
+import { useAPI } from "./hooks/useAPI";
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [type, setType] = useState("all");
   const [error, setError] = useState("");
   const [delete_loading, toggle_delete_loading] = useState(false);
-  const [get_loading, toggle_get_loading] = useState(false);
-  const [myName, setMyName] = useLocalStorage("", "name");
+  const [myName, setMyName] = useLocalStorage("", "my_name");
+
+  const [fetch_function, loading] = useAPI(() => {
+    return fetch("https://jsonplaceholder.typicode.com/todos");
+  });
 
   function addTodo() {
     if (newTodo === "") {
@@ -76,9 +80,7 @@ function App() {
   });
 
   function getAllTodos() {
-    toggle_get_loading(true);
-
-    fetch("https://jsonplaceholder.typicode.com/todos")
+    fetch_function()
       .then((res) => res.json())
       .then((data) => {
         let first_ten = data.splice(0, 9);
@@ -87,9 +89,6 @@ function App() {
       })
       .catch((error) => {
         console.log("Error", error);
-      })
-      .finally(() => {
-        toggle_get_loading(false);
       });
   }
 
@@ -153,7 +152,7 @@ function App() {
           {error ? <p>{error}</p> : null}
         </div>
         <div style={{ width: "70%", margin: "12px auto" }}>
-          {get_loading ? (
+          {loading ? (
             <div>
               <p>Loading...</p>
             </div>
