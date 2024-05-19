@@ -13,9 +13,9 @@ function App() {
   const [delete_loading, toggle_delete_loading] = useState(false);
   const [myName, setMyName] = useLocalStorage("", "my_name");
 
-  const [fetch_function, loading] = useAPI(() => {
-    return fetch("https://jsonplaceholder.typicode.com/todos");
-  });
+  const [fetch_function, loading] = useAPI(() =>
+    fetch("https://jsonplaceholder.typicode.com/todos")
+  );
 
   function addTodo() {
     if (newTodo === "") {
