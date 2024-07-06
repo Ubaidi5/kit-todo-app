@@ -5,9 +5,13 @@ import { Button } from "antd";
 import List from "./components/List";
 import { useLocalStorage } from "./hooks/useLoaclStorage";
 import { useAPI } from "./hooks/useAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { todo_action } from "./app/todoSlice";
 
 function App() {
-  const [todos, setTodos] = useState([]);
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos.todo);
+  const [_, setTodos] = useState([]);
   const [type, setType] = useState("all");
   const [error, setError] = useState("");
   const [delete_loading, toggle_delete_loading] = useState(false);
@@ -31,11 +35,8 @@ function App() {
     }
 
     setError("");
-    todos.push({
-      title: newTodo,
-      status: "pending",
-    });
-    setTodos([...todos]);
+    dispatch(todo_action.add_todo({ title: newTodo, status: "pending" }));
+
     setNewTodo("");
 
     localStorage.setItem("todos", JSON.stringify(todos));
@@ -43,14 +44,7 @@ function App() {
 
   async function deleteTodo(index) {
     try {
-      toggle_delete_loading(true);
-      const res = await fetch("https://jsonplaceholder.typicode.com/todos/1", {
-        method: "DELETE",
-      });
-
-      todos.splice(index, 1);
-      setTodos([...todos]);
-      localStorage.setItem("todos", JSON.stringify(todos));
+      dispatch(todo_action.delete_todo(index));
     } catch (err) {
       console.log("Error in Delete function", err);
     } finally {
@@ -84,8 +78,7 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         let first_ten = data.splice(0, 9);
-        console.log({ first_ten });
-        setTodos(first_ten);
+        dispatch(todo_action.store_all_todos(first_ten));
       })
       .catch((error) => {
         console.log("Error", error);
