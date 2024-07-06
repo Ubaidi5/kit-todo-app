@@ -1,6 +1,6 @@
 import { FaRegTrashCan } from "react-icons/fa6";
-import Button from "./Button";
-import { AiOutlineLoading } from "react-icons/ai";
+import { Button, Row, Col } from "antd";
+import moment from "moment";
 
 const List = (props) => {
   const { todos, markAsComplete, deleteTodo, delete_loading } = props;
@@ -11,42 +11,39 @@ const List = (props) => {
     <div>
       {todos.map((todo, index) => {
         return (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <p>{todo.title}</p>
+          <Row align={"middle"} justify="space-between">
+            <Col>
+              <p>{todo.title}</p>
+            </Col>
 
-            <p style={{ flexShrink: 0 }}>
-              {todo.completed == false ? (
-                <Button
-                  onClick={() => {
-                    markAsComplete(index);
-                  }}
-                >
-                  Pending
-                </Button>
-              ) : (
-                <span style={{ color: "green" }}>Completed</span>
-              )}
-              <Button
-                bgcolor="red"
-                style={{ marginLeft: 12, borderRadius: 50 }}
-                onClick={() => {
-                  currentIndex = index;
-                  deleteTodo(index);
-                }}
-              >
-                {delete_loading && currentIndex === index ? (
-                  <AiOutlineLoading />
+            <Col>
+              <p style={{ flexShrink: 0 }}>
+                {todo.completed == false ? (
+                  <Button
+                    onClick={() => {
+                      markAsComplete(index);
+                    }}
+                  >
+                    Pending
+                  </Button>
                 ) : (
-                  <FaRegTrashCan />
+                  <span style={{ color: "green" }}>Completed</span>
                 )}
-              </Button>
-            </p>
-          </div>
+                <Button
+                  bgcolor="red"
+                  style={{ marginLeft: 12, borderRadius: 50 }}
+                  onClick={() => {
+                    currentIndex = index;
+                    deleteTodo(index);
+                  }}
+                  danger
+                  loading={delete_loading && currentIndex === index}
+                >
+                  <FaRegTrashCan />
+                </Button>
+              </p>
+            </Col>
+          </Row>
         );
       })}
     </div>

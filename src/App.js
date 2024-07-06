@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import Input from "./components/Input";
-import Button from "./components/Button";
+import { Button } from "antd";
 import List from "./components/List";
 import { useLocalStorage } from "./hooks/useLoaclStorage";
 import { useAPI } from "./hooks/useAPI";
@@ -100,20 +100,6 @@ function App() {
 
   return (
     <div>
-      <input
-        value={myName}
-        onChange={(e) => {
-          setMyName(e.target.value);
-        }}
-      />
-      <p>My name: {myName}</p>
-      <button
-        onClick={() => {
-          setMyName("Ubaid");
-        }}
-      >
-        Update
-      </button>
       <h1 style={{ textAlign: "center", marginTop: 32 }}>React Todo App</h1>
       <div
         style={{
@@ -145,9 +131,7 @@ function App() {
                 }
               }}
             />
-            <Button bgcolor="blue" color="white" onClick={addTodo}>
-              Add todo
-            </Button>
+            <Button onClick={addTodo}>Add todo</Button>
           </div>
           {error ? <p>{error}</p> : null}
         </div>
